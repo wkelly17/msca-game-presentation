@@ -4,6 +4,10 @@ export default function navigate(event, currentRoom) {
   let roomContainer = document.querySelector('#RoomContainer');
   let navArrows = [...document.querySelectorAll('[data-role = "nav-arrow"]')];
 
+  if (!navArrows) {
+    return; //navArrows are toggled off for zoomed in views;  This will leave the key event listener intact while bailing early instead of removing and re-adding event listener;
+  }
+
   let direction;
   if (event.type == 'click') {
     direction = event.target.dataset.direction;

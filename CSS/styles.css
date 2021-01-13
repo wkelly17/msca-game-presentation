@@ -66,7 +66,6 @@ img {
   background-color: rgba(48, 45, 45, 0.753);
   /* background-color: orange; */
   z-index: 5;
-  pointer-events: none;
 }
 
 /* ? Maybe do this since I've been resizing to canvas thus far for svgs; So When i translate or animate they do not cut off...display */
@@ -88,18 +87,9 @@ img {
   grid-template-rows: 350px 200px 50px;
   grid-template-areas:
     'game inv'
-    'game .'
+    'game messages'
     'game timer';
 }
-
-/* #gameContainer.lightsOff {
-  --color-frontWall: #02105c;
-  --color-sideWalls: #4c369e;
-  --color-floor: #041431;
-  --color-icon-inactive: rgb(218, 214, 214);
-  --color-icon-hover: rgb(255, 255, 255);
-} */
-/* holds Nav Icons and room scene injected via JS */
 
 #navBtnsContainer,
 #RoomContainer {
@@ -284,13 +274,17 @@ img {
   flex-wrap: wrap;
 }
 
+.inventoryItemUsed {
+  filter: brightness(0.3);
+  pointer-events: none;
+}
+
 /* leave strange phantom space between flex-rows */
 
 .inventory > * {
   width: 62px;
   height: 62px;
   object-fit: contain;
-
   border: solid 1px white;
   display: block;
   padding: 0;
@@ -302,15 +296,22 @@ img {
   color: white;
 }
 
-.inv-item img {
-  object-fit: contain;
-  height: 70%;
-}
-
 .inventoryGlow {
   box-shadow: 1px 1px 3px 5px rgba(238, 255, 0, 0.164),
     -1px -1px 3px 5px rgba(238, 255, 0, 0.175);
   z-index: 2;
+}
+
+/* @# ===============  messages section   =============   */
+
+.messagesContainer {
+  border: solid green 1px;
+  padding: 0.5em;
+  text-align: center;
+  font-size: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 /* @#===============  TIMER   =============   */
@@ -327,56 +328,6 @@ img {
   left: 300px;
   padding: 1px;
   z-index: 300;
-}
-
-#keypad {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 400px;
-  height: 500px;
-  margin: 0 auto;
-  border: solid 1px gray;
-  padding: 30px;
-  background: gray;
-}
-
-.keypad-controls {
-  display: flex;
-  justify-content: space-between;
-  margin: 0 auto;
-}
-
-.keypad-buttons {
-  /* width: 90%; */
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-}
-
-.display {
-  background: green;
-  color: white;
-  text-align: right;
-  padding: 5px;
-  margin-bottom: 20px;
-  font-size: 55px;
-}
-
-.keypadButton {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  margin-bottom: 20px;
-  margin-right: 5px;
-}
-
-.card-slot {
-  width: 15px;
-  height: 300px;
-  background: #555555;
-  border-radius: 5px;
-  /* margin-left: 30px; */
 }
 
 #bed {
@@ -428,8 +379,87 @@ img {
   top: 152px;
   right: 180px;
 }
+.rotatedLock {
+  transform: rotate(90deg);
+  transition-duration: 0.3s;
+}
 
 .filingCabinet.open {
   fill: pink;
   border: solid red 10px;
+}
+
+.keypad {
+  width: 50px;
+  height: 50px;
+  top: 180px;
+  left: 150px;
+}
+
+#keypadZoomedContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: 500px;
+  margin: 0 auto;
+  border: solid 1px gray;
+  padding: 30px;
+  background: gray;
+  z-index: 7;
+}
+
+#keypadZoomedContainer [data-fxn='close'] {
+  position: absolute;
+  top: 3px;
+  right: 5px;
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: white;
+  cursor: pointer;
+}
+
+.keypad-controls {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 auto;
+}
+
+.keypadBtnsContainer {
+  /* width: 90%; */
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.display {
+  height: 60px;
+  background: green;
+  color: white;
+  text-align: right;
+  letter-spacing: 4px;
+  line-height: 65px;
+  padding: 5px;
+  margin-bottom: 20px;
+  font-size: 55px;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.keypadButton {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  margin-right: 5px;
+  font-size: 30px;
+}
+
+.card-slot {
+  width: 15px;
+  height: 300px;
+  background: #555555;
+  border-radius: 5px;
+  /* margin-left: 30px; */
 }

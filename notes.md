@@ -2,7 +2,7 @@
 
 ```html
  <!-- ! Will need to hook up JS for it -->
-<div id="keypad">
+<div id="Zoomedkeypad">
           <p class="display">10</p>
           <div class="keypad-controls">
             <div class="keypad-buttons">

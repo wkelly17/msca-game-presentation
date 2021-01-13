@@ -3,10 +3,18 @@ function key(room) {
     return '';
   }
 
+  function getClassNames() {
+    if (room.$blanket?.inspected && !room.$key?.found) {
+      return `key dVisible`;
+    } else {
+      return 'key';
+    }
+  }
+
   let html = `
   <svg
 	  id="${room.name + 'key'}"
-	  class = ${room.$blanket?.inspected && !room.$key?.found && 'dVisible'}
+	  class = '${getClassNames()}' 
    width="9.1752234"
    height="25.451254"
    viewBox="0 0 2.4276113 6.7339776"

@@ -2,31 +2,16 @@
 
 /* todos
 
-todo: today:
-todo: Abstract room interaction functions (INTERACT, LIGHTSWITCH ) per example of interact and for reusability;
-TODO: FOR DOM INTERACTIONS, ADD A CHECK FOR INVENTORY ITEM IN USE FXN (LIKE ON INTERACT LOCKED ITEM FUNCTION) TO RETURN EARLY IF INV ITEM DOES NOTHING... MAYBE EVEN ADD A ROOM CONTAINER LISTENER TO ELIMINATE GLOW ON CLICKS ON NOTHING;
+todo: Refine message box and add a random wrong message function...;
 
-TODO: ZOOMED IN VIEWS ON THINGS... like a keypad (WILL HAVE TO PASS SPECIFIC VIEW TO A RENDER FUNCTION)
+todo: clean up css naming when I redo the artwork
 
-todo: Use spare space as a message box;
+todo:  MicroComponentSVG when you develop in inkscape.... rotation is around biggest most object... Semantic naming... (don't have to all their own files... just copy and past micro bits into one file)
 
-todo: clean up css? 
-
-todo:  clean up css naming
-todo:  refactor main APP page here probably as a class or something;
 todo:  develop Story line //puzzles
-todo:  develop more artwork (focus on semantic naming in inkscape for animations;  Think about hitboxes or animations)
-todo:  increase light switch hitbox (or redo SVG really;) by including switch itself in event listener (in future in inkscape, just include it on a whole group)) think hitbox, and then I can conditionally render sub-SVG groups based upon the hitbox or object state; 
-
-todo: add another room to test going between rooms;
-todo: zoomed in scenes (rooms folder ? or ... Current choose view fxn is switch;  L)
-todo: deleting element from view (conditionally render something based on room state;  Have to have all the svg components in room at start though;)
-todo: and then moving that item to inventory
-todo: glow function on item
-todo: use item functionality (e.g key to door or lockbox)
+todo: use item functionality for iventory items on each other??? mmm...
+todo: html book?
 todo: timer functionality for game
-todo: zoomed in room view
-todo: 
 todo: 
 
 */
@@ -37,16 +22,17 @@ import room1 from './rooms/room1.js';
 import navControls from './utils/navDefs.js';
 import navigate from './utils/navigation.js';
 
-// @# immutable DOM containers available from start
+// @# immutable DOM containers available from start; Appended to game;
 
 const gameContainer = document.querySelector('#gameContainer');
-let roomContainer = document.querySelector('#RoomContainer');
+const roomContainer = document.querySelector('#RoomContainer');
 const inventoryContainer = document.querySelector('.inventory');
+const messageContainer = document.querySelector('.messageContent');
 
 // // holds nav controls;
 const navBtnsContainer = document.querySelector('#navBtnsContainer');
 navBtnsContainer.innerHTML += navControls;
-let navArrows = [...document.querySelectorAll('[data-role = "nav-arrow"]')];
+const navArrows = [...document.querySelectorAll('[data-role = "nav-arrow"]')];
 
 // todo: Refactor to part of main APP initializing later;
 // room1.render(roomContainer);
@@ -57,6 +43,7 @@ let game = {
   navBtnsContainer: navBtnsContainer,
   navArrows: navArrows,
   inventoryContainer: inventoryContainer,
+  messageContainer: messageContainer,
 
   // pieces of global game state;
   currentRoom: room1,
@@ -77,6 +64,7 @@ let game = {
       console.log(game.inventory);
     },
     handleInventoryClick: function (event) {
+      // debugger;
       if (!game.inventory.itemInUse) {
         event.target.classList.add('inventoryGlow');
 
@@ -89,16 +77,33 @@ let game = {
       }
     },
     hydrateInventory: function () {
-      game.inventory.items.forEach((item) => {
-        item.nodes = document.querySelectorAll(item.selector);
-        item.nodes.forEach((node) =>
-          node.addEventListener('click', (event) =>
-            game.inventory.handleInventoryClick(event)
-          )
-        );
-      });
+      // debugger;
+
+      //preferable to just add event listener to last item;
+      let newestItem = game.inventory.items[game.inventory.items.length - 1];
+      // objects are reused and modified for inventory, hence qsa is used;
+      newestItem.nodes = game.inventoryContainer.querySelectorAll(
+        newestItem.selector
+      );
+      newestItem.nodes.forEach((node) =>
+        node.addEventListener('click', (event) =>
+          game.inventory.handleInventoryClick(event)
+        )
+      );
+      // game.inventory.items.forEach((item) => {
+
+      //   item.nodes = game.inventoryContainer.querySelectorAll(item.selector);
+      //   item.nodes.forEach((node) =>
+      //     node.addEventListener('click', (event) =>
+      //       game.inventory.handleInventoryClick(event)
+      //     )
+      //   );
+      // });
     },
     clearInventoryGlow: function () {
+      if (!game.inventory.itemInUse) {
+        return;
+      }
       game.inventory.items.map((item) =>
         item.nodes.forEach((node) => node.classList.remove('inventoryGlow'))
       );
@@ -108,7 +113,6 @@ let game = {
     },
   },
   timer: null,
-  modalBlur: false, //
   init: function () {
     // hook up clickable navigation;
     game.navArrows.forEach((arrow) =>
@@ -120,17 +124,22 @@ let game = {
     document.body.addEventListener('keyup', (event) =>
       navigate(event, game.currentRoom)
     );
+    // Add listener for clearing inventory glow;
+    game.roomContainer.addEventListener(
+      'click',
+      game.inventory.clearInventoryGlow
+    );
+
     //render first room
     game.currentRoom.render(game.roomContainer, game.currentRoom);
   },
   refreshArrows: function () {
-    // render method of newRoom?
+    // ? don't think i need;
   },
 };
-console.log(game);
-console.log(navArrows);
 
 game.init();
+console.log(game);
 
 //@#=============== EXPORTS  =============
 

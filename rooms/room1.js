@@ -4,14 +4,23 @@ import {
   interactLockedItem,
   render,
   hydrateDomElements,
+  notALockedItem,
+  focusView,
+  inspect,
+  switchLights,
+  addtoInventory,
 } from './roomFunctions.js';
 import defaultRoom from './defaultRoom.js';
 import ceilingView from './defaultCeilingView.js';
 import bedSVG from '../game-components/bed.js';
 import lightSwitchSVG from '../game-components/lightswitch.js';
 import filingCabinetSVG from '../game-components/filingCabinet.js';
+import keypadSVG from '../game-components/keypad.js';
+import keypadZoomed from '../game-components/keypadZoomed.js';
+
 import doorSVG from '../game-components/door.js';
 import keySVG from '../game-components/key.js';
+import toggleNavArrows from '../utils/toggleArrows.js';
 
 /* 
 html interactive components?
@@ -77,70 +86,76 @@ let room1 = {
   $filingCabinet: {
     name: '$filingCabinet',
     nodes: null,
+    //  subnodes are affected when the main node is solved;
+    affectedNodes: [
+      {
+        selector: '.filingCabinetLock',
+        class: 'rotatedLock',
+      },
+    ],
     selector: '#filingCabinet',
     listenerType: 'click',
     open: false,
     isSolvedBy: 'key',
+    solvedMessage:
+      'You feel the key catch and give it a turn;  The drawer pops open',
     fxn: interactLockedItem,
+  },
+  $keypad: {
+    name: '$keypad',
+    nodes: null,
+    selector: '#keypad',
+    listenerType: 'click',
+    inspected: false,
+    fxn: focusView,
+  },
+  $keypadBtns: {
+    name: '$keypadBtns',
+    nodes: null,
+    selector: '[data-role = "keypadElement"]',
+    listenerType: 'click',
+    inspected: false,
+    fxn: manageKeypad,
   },
 };
 
 function goToRoom2() {
-  debugger;
+  if (notALockedItem()) {
+    return;
+  }
   console.log(game);
   game.currentRoom = room2;
   console.log(game);
   room2.render(game.roomContainer, room2);
 }
 
-function addtoInventory(
-  event,
-  { name, node, imgSrc, selector, ...rest },
-  room
-) {
-  room[name].found = !room[name].found;
-  room1.render(game.roomContainer, room1);
-  //   render to remove
-  game.inventory.items.push(room[name]);
-  game.inventory.render(room[name]);
-}
-
-function inspect(event, { name, inspected, ...rest }, room) {
-  //   debugger;
-  //? abstract out into shared functions by passing room param?
-  //   boolean below; maybe use value for non boolean above this line;
-  console.log(rest);
-  console.log('inspected');
-  room1[name].inspected = !room1[name].inspected;
-  room1.render(game.roomContainer, room1);
-  //   let inspectedState = event.target.class;
-}
-
-function switchLights(event, { name, audio, ...rest }) {
-  //   Room state change
-  room1.lightsAreOn = !room1.lightsAreOn;
-
-  //   Object property state change
-  room1[name].lightsOff = !room1[name].lightsOff;
-
-  let lightsAreOff = room1.lightsAreOn == false;
-  lightsAreOff
-    ? game.roomContainer.classList.add('lightsOff')
-    : game.roomContainer.classList.remove('lightsOff');
-
-  room1.render(game.roomContainer, room1);
+// Will abstract out if needed in more than one room;
+function manageKeypad(event, obj, room) {
+  //room for abstraction;
+  let display = document.querySelector('.display');
+  let btnPressed = event.target;
+  if (btnPressed.dataset.fxn == 'close') {
+    room1.modalBlur = false; //room1
+    room1.$keypad.inspected = false; //updating state;
+    toggleNavArrows();
+    room1.render(game.roomContainer, room1);
+    //   call a re-render to reflect state
+  } else {
+    display.textContent += event.target.textContent;
+    //  checkForSolved()    //doesn't exist yet;
+  }
 }
 
 //@# --------  ROOM HTML VIEWS; ------------
 
 room1.frontHTML = function frontHTML() {
-  //@% inline works for boolean styles for classnames;;   May need more complicated logic in dedicated rendering functions here (for d - none is used or something like that)
-  // May need to see about changing modal blur
   let html = `
   ${defaultRoom}
   ${bedSVG(room1)}
   ${keySVG(room1)}
 ${lightSwitchSVG(room1)}
+${keypadSVG(room1)}
+${keypadZoomed(room1)}
 ${doorSVG(room1)}
 ${filingCabinetSVG(room1)}
 	`;

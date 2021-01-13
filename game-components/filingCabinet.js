@@ -1,4 +1,6 @@
 function filingCabinet(room) {
+  let filingCabinetLock = 'filingCabinetLock'; //className
+
   // functions
   let html = `
   <svg
@@ -292,7 +294,8 @@ function filingCabinet(room) {
 		  style="stroke:#000000;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none" />
 	  <circle
 		  style="opacity:0.974277;fill:#aa8800;fill-opacity:1;stroke:#aa8800;stroke-width:0.529167;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0"
-		  id="path2771"
+		  id="${filingCabinetLock}"
+		  class = "${filingCabinetLock}"
 		  cx="212.74464"
 		  cy="119.92903"
 		  r="1.4255129" />
@@ -318,6 +321,55 @@ function filingCabinet(room) {
 		  y="119.39967" />
 	</g>
  </g>
+
+</svg>
+<svg
+width="3.124849"
+height="3.906807"
+viewBox="0 0 8.2351167 8.7065927"
+version="1.1"
+id="wholeLock">
+<defs
+  id="defs2936" />
+<g
+  id="layer1"
+  transform="translate(-121.5575,-57.262626)">
+ <g
+	 id="wholeLock"
+	 transform="matrix(0.09386276,0,0,0.09386276,114.13961,54.370905)">
+	<ellipse
+		style="fill:#aa8800;stroke-width:0.264583"
+		id="path7"
+		cx="122.89698"
+		cy="77.18734"
+		rx="43.867859"
+		ry="46.379375" />
+	<ellipse
+		style="fill:none;stroke:#000000;stroke-width:2.0402;stroke-miterlimit:4;stroke-dasharray:none"
+		id="path9"
+		cx="122.27585"
+		cy="76.846268"
+		rx="36.88422"
+		ry="39.340923" />
+	<g
+		id="filingCabinetLock">
+	  <ellipse
+		  style="fill:#000000;stroke:#000000;stroke-width:2.0402;stroke-miterlimit:4;stroke-dasharray:none"
+		  id="path834"
+		  cx="122.89698"
+		  cy="91.586716"
+		  rx="11.720421"
+		  ry="12.222724" />
+	  <rect
+		  style="fill:#000000;stroke:#000000;stroke-width:2.0402;stroke-miterlimit:4;stroke-dasharray:none"
+		  id="rect836"
+		  width="10.715813"
+		  height="33.152046"
+		  x="117.2042"
+		  y="51.904716" />
+	</g>
+ </g>
+</g>
 </svg>
 	`;
   return html;

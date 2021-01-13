@@ -4,7 +4,16 @@ import game from '../app.js';
 import bedSVG from '../game-components/bed.js';
 import lightSwitchSVG from '../game-components/lightswitch.js';
 import doorSVG from '../game-components/door.js';
-import { chooseViewFxn, render, hydrateDomElements } from './roomFunctions.js';
+import {
+  interactLockedItem,
+  render,
+  hydrateDomElements,
+  notALockedItem,
+  focusView,
+  inspect,
+  switchLights,
+  addtoInventory,
+} from './roomFunctions.js';
 
 let room2 = {
   // @# CORE PIECES OF GLOBAL ROOM STATE;
@@ -42,37 +51,11 @@ let room2 = {
   },
 };
 
-//@# =============== interactive dom elements functions  =============
-function inspect(event, { name, inspected, ...rest }) {
-  debugger;
-  //   boolean below; maybe use value for non boolean above this line;
-  console.log(rest);
-  console.log('inspected');
-  room2[name].inspected = !room2[name].inspected;
-  room2.render(game.roomContainer, room2);
-  //   let inspectedState = event.target.class;
-}
-
-function switchLights(event, { name, audio, ...rest }) {
-  //   Room state change
-  room2.lightsAreOn = !room2.lightsAreOn;
-
-  //   Object property state change
-  room2[name].lightsOff = !room2[name].lightsOff;
-
-  let lightsAreOff = room2.lightsAreOn == false;
-  lightsAreOff
-    ? game.roomContainer.classList.add('lightsOff')
-    : game.roomContainer.classList.remove('lightsOff');
-
-  room2.render(game.roomContainer, room2);
-}
+//@# =============== ROOM UNIQUE dom elements functions  =============
 
 //@# --------  ROOM HTML VIEWS; ------------
 
 room2.frontHTML = function frontHTML() {
-  //@% inline works for boolean styles for classnames;;   May need more complicated logic in dedicated rendering functions here (for d - none is used or something like that)
-  // May need to see about changing modal blur
   let html = `
   <p>IM THE FRONT OF ROOM 2 </p>
 	${defaultRoom}
